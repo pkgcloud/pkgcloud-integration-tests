@@ -1,0 +1,34 @@
+{
+  "name": "pkgcloud-integration-tests",
+  "description": "Integration tests for pkgcloud",
+  "version": "0.0.1",
+  "author": "Ken Perkins <ken.perkins@rackspace.com>",
+  "main": "./lib",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pkgcloud/pkgcloud-integration-tests.git"
+  },
+  "keywords": [
+    "pkgcloud",
+    "integration",
+    "tests"
+  ],
+  "devDependencies": {
+    "winston": "0.7.x",
+    "mocha": "1.17.x",
+    "underscore": "1.5.x",
+    "async": "0.2.x",
+    "pkgcloud": ">=0.8.17",
+    "commander": "2.1.x",
+    "easy-table": "0.2.x"
+  },
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "b576ebe5b838d8c9ee9df8ef3731198b8fa6014c",
+  "engines": {
+    "node": "0.8.x || 0.10.x"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "my-user-name": {
+    "username": "my-user-name",
+    "apiKey": "my-api-key",
+    "provider": "rackspace"
+  }
+}
