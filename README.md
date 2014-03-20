@@ -30,7 +30,8 @@ $ node lib/providers/rackspace/compute/getServers.js my-user-name ord
 If the test in question has command line inputs, the username and region are the last arguments:
 
 ```bash
-$ node lib/providers/rackspace/compute/createServer.js "my-server-name" "1 GB Performance" "Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)" my-user-name DFW
+$ node lib/providers/rackspace/compute/createServer.js "my-server-name" "1 GB Performance"
+    "Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)" my-user-name DFW
 ```
 
 #### Running Compute tests for Rackspace
