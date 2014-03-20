@@ -7,7 +7,7 @@ Integration tests for pkgcloud
 
 Add a `provider.config.json` file inside of the `config` directory. `provider` should be one of `rackspace`, `amazon`, etc. See the `rackspace.example.json` as a template for how to setup your file. You can have multiple accounts per provider, where each key is a different account.
 
-You'll also need to run `npm install` in the root of the tests to get the dependencies. If you're working against a local copy of `pkgcloud` mak
+You'll also need to run `npm install` in the root of the tests to get the dependencies. 
 
 #### Local pkgcloud setup
 
