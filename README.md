@@ -30,12 +30,30 @@ $ node lib/providers/rackspace/compute/getServers.js my-user-name ord
 If the test in question has command line inputs, the username and region are the last arguments:
 
 ```bash
-$ node lib/providers/rackspace/dns/getZone.js 1234567 my-user-name
+$ node lib/providers/rackspace/compute/createServer.js "my-server-name" "1 GB Performance" "Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)" my-user-name DFW
 ```
+
+#### Running Compute tests for Rackspace
+
+There are a number of integration tests for Rackspace Cloud Servers. It's recommended to look at the code and see the command line arguments for each test before proceeding.
+
+- attachVolume
+- createImage
+- createServer
+- deleteImage
+- deleteServer
+- getFlavors
+- getImages
+- getServer
+- getServers
+- rebootServer
+- rebuildServer
+- renameServer
+- resizeServer
 
 #### Running DNS tests for Rackspace
 
-There are a number of integration tests for Rackspace DNS. It's recommended to look at the code and see the command line arguments for each test before proceeding.
+There are a number of integration tests for Rackspace Cloud DNS. It's recommended to look at the code and see the command line arguments for each test before proceeding.
 
 - cloneZone
 - createRecord
