@@ -23,7 +23,8 @@
     "async": "0.2.x",
     "pkgcloud": ">=0.8.17",
     "commander": "2.1.x",
-    "easy-table": "0.2.x"
+    "easy-table": "0.2.x",
+    "request": "2.34.0"
   },
   "license": "MIT",
   "readmeFilename": "README.md",
