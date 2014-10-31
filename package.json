@@ -31,5 +31,9 @@
   "gitHead": "b576ebe5b838d8c9ee9df8ef3731198b8fa6014c",
   "engines": {
     "node": "0.8.x || 0.10.x"
+  },
+  "dependencies": {
+    "node-uuid": "~1.4.1",
+    "random-string": "~0.1.1"
   }
 }

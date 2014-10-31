@@ -1,0 +1,275 @@
+{
+  "parameter_groups": [
+    {
+      "parameters": ["image", "flavor"],
+      "label": "Server Settings"
+    },
+    {
+      "parameters": ["terms", "minecraft_server_port", "minecraft_gamemode", "minecraft_spawn_animals", "minecraft_spawn_npcs", "minecraft_spawn_monsters"],
+      "label": "Minecraft Settings"
+    },
+    {
+      "parameters": ["server_hostname", "kitchen", "chef_version", "minecraft_version"],
+      "label": "rax-dev-params"
+    }
+  ],
+  "heat_template_version": "2013-05-23",
+  "description": "This is a Heat template to deploy a single Linux server running a Minecraft\\nserver.  The Minecraft server will be setup leveraging Chef solo.\\n",
+  "parameters": {
+    "server_hostname": {
+      "default": "minecraft",
+      "constraints": [
+        {
+          "length": {
+            "max": 64,
+            "min": 1
+          }
+        },
+        {
+          "allowed_pattern": "^[a-zA-Z][a-zA-Z0-9-]*$",
+          "description": "Must begin with a letter and contain only alphanumeric characters.\\n"
+        }
+      ],
+      "type": "string",
+      "description": "Hostname to use for setting the server name.",
+      "label": "Server Name"
+    },
+    "terms": {
+      "constraints": [
+        {
+          "description": "Terms must be accepted.",
+          "allowed_values": [true]
+        }
+      ],
+      "type": "boolean",
+      "description": "Required: You must agree to the Minecraft EULA found here:\\nhttps://account.mojang.com/documents/minecraft_eula\\n",
+      "label": "Agree to Terms"
+    },
+    "minecraft_version": {
+      "default": 1.8,
+      "type": "string",
+      "description": "Version of minecraft to install",
+      "label": "Minecraft Version"
+    },
+    "minecraft_server_port": {
+      "default": 25565,
+      "constraints": [
+        {
+          "range": {
+            "max": 65535,
+            "min": 1024
+          },
+          "description": "Port must be an unprivileged port in the range of 1024-65535\\n"
+        }
+      ],
+      "type": "number",
+      "description": "Port to run Minecraft server on",
+      "label": "Minecraft Server Port"
+    },
+    "image": {
+      "default": "Ubuntu 14.04 LTS (Trusty Tahr)",
+      "constraints": [
+        {
+          "description": "Must be a supported operating system.",
+          "allowed_values": ["Ubuntu 12.04 LTS (Precise Pangolin)", "Ubuntu 14.04 LTS (Trusty Tahr)", "Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)"]
+        }
+      ],
+      "type": "string",
+      "description": "Server image used for all servers that are created as a part of this\\ndeployment\\n",
+      "label": "Operating System"
+    },
+    "chef_version": {
+      "default": "11.16.0",
+      "type": "string",
+      "description": "Version of chef client to use",
+      "label": "Chef Version"
+    },
+    "minecraft_spawn_npcs": {
+      "default": "true",
+      "constraints": [
+        {
+          "allowed_values": ["true", "false"]
+        }
+      ],
+      "type": "string",
+      "description": "Spawn villagers",
+      "label": "Spawn Villagers"
+    },
+    "minecraft_gamemode": {
+      "default": 0,
+      "constraints": [
+        {
+          "range": {
+            "max": 3,
+            "min": 0
+          },
+          "description": "0: Survival, 1: Creative, 2: Adventure, 3: Spectator\\n"
+        }
+      ],
+      "type": "number",
+      "description": "Mode of gameplay",
+      "label": "Game Mode"
+    },
+    "minecraft_spawn_animals": {
+      "default": "true",
+      "constraints": [
+        {
+          "allowed_values": ["true", "false"]
+        }
+      ],
+      "type": "string",
+      "description": "Spawn animals",
+      "label": "Spawn Animals"
+    },
+    "flavor": {
+      "default": "4 GB Performance",
+      "constraints": [
+        {
+          "description": "Must be a valid Rackspace Cloud Server flavor for the region you have\\nselected to deploy into.\\n",
+          "allowed_values": ["1 GB Performance", "2 GB Performance", "4 GB Performance", "8 GB Performance", "15 GB Performance", "30 GB Performance", "1GB Standard Instance", "2GB Standard Instance", "4GB Standard Instance", "8GB Standard Instance", "15GB Standard Instance", "30GB Standard Instance"]
+        }
+      ],
+      "type": "string",
+      "description": "Rackspace Cloud Server flavor to use. The size is based on the amount of\\nRAM for the provisioned server.\\n",
+      "label": "Server Size"
+    },
+    "minecraft_spawn_monsters": {
+      "default": "true",
+      "constraints": [
+        {
+          "allowed_values": ["true", "false"]
+        }
+      ],
+      "type": "string",
+      "description": "Spawn monsters",
+      "label": "Spawn Monsters"
+    },
+    "kitchen": {
+      "default": "https://github.com/rackspace-orchestration-templates/minecraft",
+      "type": "string",
+      "description": "URL for the kitchen to use",
+      "label": "Kitchen"
+    }
+  },
+  "outputs": {
+    "private_key": {
+      "description": "SSH Private Key",
+      "value": {
+        "get_attr": ["ssh_key", "private_key"]
+      }
+    },
+    "server_port": {
+      "description": "Minecraft Port",
+      "value": {
+        "get_param": "minecraft_server_port"
+      }
+    },
+    "server_ip": {
+      "description": "Server IP",
+      "value": {
+        "get_attr": ["minecraft_server", "accessIPv4"]
+      }
+    }
+  },
+  "resources": {
+    "minecraft_setup": {
+      "depends_on": "minecraft_server",
+      "type": "OS::Heat::ChefSolo",
+      "properties": {
+        "username": "root",
+        "node": {
+          "minecraft": {
+            "url": {
+              "str_replace": {
+                "params": {
+                  "%minecraft_version%": {
+                    "get_param": "minecraft_version"
+                  }
+                },
+                "template": "https://s3.amazonaws.com/Minecraft.Download/versions/%minecraft_version%/minecraft_server.%minecraft_version%.jar"
+              }
+            },
+            "checksum": "40e23f3823d6f0e3cbadc491cedb55b8ba53f8ab516b68182ddd1536babeb291",
+            "accept_eula": {
+              "get_param": "terms"
+            },
+            "properties": {
+              "rcon.port": 25575,
+              "spawn-monsters": {
+                "get_param": "minecraft_spawn_monsters"
+              },
+              "spawn-npcs": {
+                "get_param": "minecraft_spawn_npcs"
+              },
+              "gamemode": {
+                "get_param": "minecraft_gamemode"
+              },
+              "spawn-animals": {
+                "get_param": "minecraft_spawn_animals"
+              },
+              "server-port": {
+                "get_param": "minecraft_server_port"
+              },
+              "query.port": {
+                "get_param": "minecraft_server_port"
+              }
+            }
+          },
+          "run_list": ["recipe[apt]", "recipe[java::openjdk]", "recipe[minecraft]", "recipe[rax-firewall]"],
+          "rax": {
+            "firewall": {
+              "tcp": [
+                {
+                  "get_param": "minecraft_server_port"
+                }
+              ]
+            }
+          }
+        },
+        "private_key": {
+          "get_attr": ["ssh_key", "private_key"]
+        },
+        "host": {
+          "get_attr": ["minecraft_server", "accessIPv4"]
+        },
+        "chef_version": {
+          "get_param": "chef_version"
+        },
+        "kitchen": {
+          "get_param": "kitchen"
+        }
+      }
+    },
+    "minecraft_server": {
+      "type": "Rackspace::Cloud::Server",
+      "properties": {
+        "key_name": {
+          "get_resource": "ssh_key"
+        },
+        "flavor": {
+          "get_param": "flavor"
+        },
+        "name": {
+          "get_param": "server_hostname"
+        },
+        "image": {
+          "get_param": "image"
+        },
+        "metadata": {
+          "rax-heat": {
+            "get_param": "OS::stack_id"
+          }
+        }
+      }
+    },
+    "ssh_key": {
+      "type": "OS::Nova::KeyPair",
+      "properties": {
+        "name": {
+          "get_param": "OS::stack_id"
+        },
+        "save_private_key": true
+      }
+    }
+  }
+}
