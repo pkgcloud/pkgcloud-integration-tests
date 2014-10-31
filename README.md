@@ -15,6 +15,18 @@ You'll also need to run `npm install` in the root of the tests to get the depend
 
 To setup a local pkgcloud install, run `npm link` in the `pkgcloud` directory, and then `npm link pkgcloud` in the root of  `pkgcloud-integration-tests`
 
+### Provider selection
+
+All of tests that are not provider specific, i.e. `lib/compute/getServers.js` require a provider name as the first argument after the script. For example:
+
+```bash
+$ node lib/compute/getServers.js openstack {{config-key-name}} {{region}}
+```
+
+The list of valid providers exactly matches the pkgcloud providers:
+
+`azure`, `amazon`, `rackspace`, `hp`, `openstack`, `joyent`, `digitalocean`
+
 ### Running Tests
 
 Generally, to run a test, you invoke node and the test you wish to run:
